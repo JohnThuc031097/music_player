@@ -133,18 +133,25 @@ body {
   background-color: var(--primary-color);
   border-radius: 50%;
 }
-.wapper-cd__label-music-song-current-total {
+.display__count-song {
   position: absolute;
   top: calc(100% - 10px);
   left: calc(50% - 25px);
+  padding: 0 10px;
   background-color: #fff;
   border-radius: 20px;
   border: 1px solid rgb(236, 233, 233);
 }
-.wapper-cd__label-music-song-current-total-text {
+.display__count-current-song,
+.display__count-operator-song,
+.display__count-total-song {
   color: var(--second-color);
   font-size: 0.75rem;
-  padding: 5px 10px;
+}
+.display__count-operator-song {
+}
+.display__count-total-song {
+  color: var(--primary-color);
 }
 
 .wapper-playlist {

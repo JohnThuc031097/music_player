@@ -1,58 +1,14 @@
+import { Render } from "./render.js";
+import { Api } from "./api.js";
 
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
-const apiDomain = 'https://my-json-server.typicode.com/JohnThuc031097/api_music_player';
+const apiDomain = 'http://localhost:3000';
 const apiAppSongs = 'songs';
 
 const ePlayList = $('.wapper-playlist');
-
-class AppMusic {
-  constructor(apiDomain, apiUrl, htmlSong) {
-    this.apiDomain = apiDomain;
-    this.apiUrl = apiUrl;
-    this.htmlSong = htmlSong;
-  }
-  init() {
-  }
-
-  loadDataSongs(ePlayList) {
-    this.getSongs((data) => {
-      console.log(data);
-      ePlayList.innerHTML = this.renderSongs(data);
-    }, (error) => {
-      console.log('error:', error);
-    });
-  }
-
-  /**
-   * @param {*} callBack function
-   * @param {*} errorCallback function
-   */
-  getSongs(callBack, errorCallback) {
-    fetch(`${this.apiDomain}/${this.apiUrl}`)
-      .then(res => res.json())
-      .then(callBack)
-      .catch(errorCallback);
-  }
-  /**
-   * @param {*} data 
-   */
-  renderSongs(data) {
-    return this.setDataSongInHTML(this.htmlSong, ...data);
-  }
-  /**
-   * @param {*} html 
-   * @param {*} data
-   * @returns Strings html after replace
-   */
-  setDataSongInHTML(html, data) {
-    for (const key in data) {
-      html = html.replace(`{${key}}`, data[key]);
-    }
-    return html;
-  }
-};
+const eDisplayCount = $('.display__count-song');
 
 const htmlSong =/*html*/`
       <li song-id="{id}" class="col mb-3_5 wapper-playlist__music-item {isActive}">
@@ -71,6 +27,23 @@ const htmlSong =/*html*/`
           </div>
         </div>
       </li>`;
-const appMusic = new AppMusic(apiDomain, apiAppSongs, htmlSong);
+const htmlTotalSong = /*html*/`
+  <span class="display__count-current-song">1</span>
+  <span class="display__count-operator-song">/</span>
+  <span class="display__count-total-song">{songTotal}</span>`;
+
+const appMusic = {
+  init: function (){
+    Api.apiDomain = apiDomain;
+    Api.apiUrl = apiAppSongs;
+    Api.getSongs(data => {
+      console.log('getSongs:', data);
+      ePlayList.innerHTML = Render.renderSongs(htmlSong, data);
+      eDisplayCount.innerHTML = Render.renderTotalSong(htmlTotalSong, data.length);
+    }, error => {
+      console.error('getSongs:', error);
+    })
+  }
+}
+
 appMusic.init();
-appMusic.loadDataSongs(ePlayList);

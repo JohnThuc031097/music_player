@@ -7,10 +7,16 @@ body {
   background-color: var(--background-color);
 }
 .app-music {
-  background-color: #fff;
+  z-index: 0;
+  position: relative;
 }
 
 .heading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
   color: var(--primary-color);
   height: 50px;
 }
@@ -43,10 +49,13 @@ body {
 }
 
 .wapper-cd {
-  position: relative;
+  position: fixed;
+  top: 50px;
+  left: 0;
+  right: 0;
+  background-color: #fff;
 }
 .wapper-cd__img-music {
-  position: relative;
   width: 100%;
   height: 200px;
   margin: 20px 0;
@@ -99,18 +108,30 @@ body {
 }
 .wapper-cd__progress-bar-bg {
   background-color: rgb(245, 180, 189);
-  height: 5px;
+  height: 2px;
   border-radius: 3px;
 }
 .wapper-cd__progress-bar-percent {
+  z-index: 0;
   position: absolute;
-  background-color: var(--primary-color);
   top: 0;
   left: 6%;
   right: 6%;
   width: 88%;
   height: 100%;
+  background-color: var(--primary-color);
   border-radius: 3px;
+}
+.wapper-cd__progress-bar-circle {
+  z-index: 1;
+  position: absolute;
+  top: -4px;
+  left: 6%;
+  right: 6%;
+  width: 10px;
+  height: 10px;
+  background-color: var(--primary-color);
+  border-radius: 50%;
 }
 .wapper-cd__label-music-song-current-total {
   position: absolute;
@@ -125,12 +146,14 @@ body {
   font-size: 0.75rem;
   padding: 5px 10px;
 }
+
 .wapper-playlist {
   background-color: var(--background-color);
+  margin-top: 410px;
   padding-top: 30px;
 }
 .wapper-playlist__music-item.active {
-  box-shadow: 0 3px 3px 2px var(--primary-color);
+  box-shadow: 0 2px 3px 2px var(--primary-color);
 }
 .wapper-playlist__music-item {
   background-color: #fff;
@@ -139,7 +162,7 @@ body {
   margin-bottom: 10px;
   border: 1px solid rgb(235, 231, 231);
   border-radius: 5px;
-  box-shadow: 0 3px 3px 1px rgb(230, 229, 229);
+  box-shadow: 0 2px 3px 1px rgb(230, 229, 229);
 }
 .wapper-playlist__music-item-img {
   display: flex;

@@ -2,12 +2,12 @@ export const Render = {
 
   renderPlayList: (htmlSong, data) => {
     return [...data].reduce((htmls, html) => {
-      return htmls += this.setDataSongInHTML(htmlSong, html);
+      return htmls += Render.setDataSongInHTML(htmlSong, html);
     }, '');
   },
 
   renderTotalSong: (html, data) => {
-    return this.setTotalSongInHTML(html, data);
+    return Render.setTotalSongInHTML(html, data);
   },
 
   setDataSongInHTML: (html, data) => {

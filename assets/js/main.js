@@ -38,11 +38,11 @@ const appMusic = {
     Api.apiUrl = apiAppSongs;
     Api.getSongs(data => {
       console.log('getSongs:', data);
-      ePlayList.innerHTML = Render.renderSongs(htmlSong, data);
+      ePlayList.innerHTML = Render.renderPlayList(htmlSong, data);
       eDisplayCount.innerHTML = Render.renderTotalSong(htmlTotalSong, data.length);
     }, error => {
       console.error('getSongs:', error);
-    })
+    });
   }
 }
 

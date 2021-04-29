@@ -18,9 +18,10 @@ class AppMusic {
 
   loadDataSongs(ePlayList) {
     this.getSongs((data) => {
+      console.log(data);
       ePlayList.innerHTML = this.renderSongs(data);
     }, (error) => {
-      console.log('error:',error);
+      console.log('error:', error);
     });
   }
 

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="./assets/css/base.css">
+  <link rel="stylesheet" href="./assets/css/grid.css">
+  <link rel="stylesheet" href="./assets/css/main.css">
+  <title>Music Player</title>
+</head>
+
+<body>
+  <div class="grid app-music">
+    <div class="row heading">
+      <div class="col mb-0_5 heading__left">
+        <span class="material-icons-outlined">
+          keyboard_arrow_down
+        </span>
+      </div>
+      <div class="col mb-3 heading__center">
+        <span class="heading__center-music-label-name">Now playing:</span>
+        <span class="heading__center-music-name">Bigcityboy</span>
+      </div>
+      <div class="col mb-0_5 heading__right">
+        <span class="material-icons-outlined">
+          add
+        </span>
+      </div>
+    </div>
+    <div class="row wapper-cd">
+      <div class="col mb-max">
+        <div class="row wapper-cd__img-music">
+          <img class="col mb-2 wapper-cd__img-music-src">
+        </div>
+        <div class="row wapper-cd__control-music">
+          <div class="col mb wapper-cd__control-music-replay">
+            <span class="material-icons">
+              replay
+            </span>
+          </div>
+          <div class="col mb-0_5 wapper-cd__control-music-previous">
+            <span class="material-icons">
+              skip_previous
+            </span>
+          </div>
+          <div class="col mb wapper-cd__control-music-play">
+            <span class="material-icons">
+              play_circle
+            </span>
+          </div>
+          <div class="col mb-hide mb wapper-cd__control-music-pause">
+            <span class="material-icons">
+              pause_circle
+            </span>
+          </div>
+          <div class="col mb-0_5 wapper-cd__control-music-next">
+            <span class="material-icons">
+              skip_next
+            </span>
+          </div>
+          <div class="col mb wapper-cd__control-music-shuffle">
+            <span class="material-icons">
+              shuffle
+            </span>
+          </div>
+        </div>
+        <div class="row wapper-cd__progress-bar">
+          <div class="col mb-3_5 wapper-cd__progress-bar-bg"></div>
+          <div class="wapper-cd__progress-bar-percent"></div>
+        </div>
+        <div class="wapper-cd__label-music-song-current-total">
+          <span class="wapper-cd__label-music-song-current-total-text">1/10</span>
+        </div>
+      </div>
+    </div>
+    <ul class="row mb-wrap wapper-playlist">
+      <li class="col mb-3_5 wapper-playlist__music-item active">
+        <div class="row">
+          <div class="col mb wapper-playlist__music-item-img">
+            <img class="wapper-playlist__music-item-img-src">
+          </div>
+          <div class="col mb-2_5 wapper-playlist__music-item-centent">
+            <span class="wapper-playlist__music-item-content-name">Bigcityboy</span>
+            <span class="wapper-playlist__music-item-content-singer">Binz</span>
+          </div>
+          <div class="col mb-0_5 wapper-playlist__music-item-option">
+            <span class="material-icons-outlined">
+              more_horiz
+            </span>
+          </div>
+        </div>
+      </li>
+      <li class="col mb-3_5 wapper-playlist__music-item">
+        <div class="row">
+          <div class="col mb wapper-playlist__music-item-img">
+            <img class="wapper-playlist__music-item-img-src">
+          </div>
+          <div class="col mb-2_5 wapper-playlist__music-item-centent">
+            <span class="wapper-playlist__music-item-content-name">Bigcityboy</span>
+            <span class="wapper-playlist__music-item-content-singer">Binz</span>
+          </div>
+          <div class="col mb-0_5 wapper-playlist__music-item-option">
+            <span class="material-icons-outlined">
+              more_horiz
+            </span>
+          </div>
+        </div>
+      </li>
+      <li class="col mb-3_5 wapper-playlist__music-item">
+        <div class="row">
+          <div class="col mb wapper-playlist__music-item-img">
+            <img class="wapper-playlist__music-item-img-src">
+          </div>
+          <div class="col mb-2_5 wapper-playlist__music-item-centent">
+            <span class="wapper-playlist__music-item-content-name">Bigcityboy</span>
+            <span class="wapper-playlist__music-item-content-singer">Binz</span>
+          </div>
+          <div class="col mb-0_5 wapper-playlist__music-item-option">
+            <span class="material-icons-outlined">
+              more_horiz
+            </span>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <div class="row footer"></div>
+  </div>
+  <script src="./assets/js/main.js"></script>
+</body>
+
+</html>

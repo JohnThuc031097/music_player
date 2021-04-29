@@ -1,0 +1,185 @@
+:root {
+  --background-color: rgb(243, 242, 247);
+  --primary-color: rgb(228, 55, 84);
+  --second-color: rgb(136, 132, 183);
+}
+body {
+  background-color: var(--background-color);
+}
+.app-music {
+  background-color: #fff;
+}
+
+.heading {
+  color: var(--primary-color);
+  height: 50px;
+}
+.heading__left {
+}
+.heading__left span {
+  display: block;
+  text-align: center;
+}
+.heading__center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-weight: 500;
+  line-height: 1.2;
+}
+.heading__center-music-label-name {
+  font-size: 0.625rem;
+}
+.heading__center-music-name {
+  color: #000;
+  font-size: 1.25rem;
+}
+.heading__right {
+}
+.heading__right span {
+  display: block;
+  text-align: center;
+}
+
+.wapper-cd {
+  position: relative;
+}
+.wapper-cd__img-music {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  margin: 20px 0;
+}
+.wapper-cd__img-music-src {
+  width: 100%;
+  height: 100%;
+  background-image: url("../img/picNowPlaying.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  border-radius: 50%;
+  border: 1px solid rgb(207, 206, 206);
+  box-shadow: 0 0 10px 2px var(--primary-color);
+}
+.wapper-cd__control-music {
+  color: var(--second-color);
+  margin-bottom: 20px;
+}
+.wapper-cd__control-music-replay span,
+.wapper-cd__control-music-previous span,
+.wapper-cd__control-music-play span,
+.wapper-cd__control-music-pause span,
+.wapper-cd__control-music-next span,
+.wapper-cd__control-music-shuffle span {
+  display: block;
+  text-align: center;
+  font-size: 1.5625rem;
+}
+.wapper-cd__control-music-replay {
+}
+.wapper-cd__control-music-previous {
+}
+.wapper-cd__control-music-play span,
+.wapper-cd__control-music-pause span {
+  color: var(--primary-color);
+  font-size: 70px;
+}
+.wapper-cd__control-music-play {
+}
+.wapper-cd__control-music-pause {
+}
+.wapper-cd__control-music-next {
+}
+.wapper-cd__control-music-shuffle {
+}
+.wapper-cd__progress-bar {
+  position: relative;
+  margin-bottom: 30px;
+}
+.wapper-cd__progress-bar-bg {
+  background-color: rgb(245, 180, 189);
+  height: 5px;
+  border-radius: 3px;
+}
+.wapper-cd__progress-bar-percent {
+  position: absolute;
+  background-color: var(--primary-color);
+  top: 0;
+  left: 6%;
+  right: 6%;
+  width: calc(100% - 12%);
+  height: 100%;
+  border-radius: 3px;
+}
+.wapper-cd__label-music-song-current-total {
+  position: absolute;
+  top: calc(100% - 10px);
+  left: calc(50% - 25px);
+  background-color: #fff;
+  border-radius: 20px;
+  border: 1px solid rgb(236, 233, 233);
+}
+.wapper-cd__label-music-song-current-total-text {
+  color: var(--second-color);
+  font-size: 0.75rem;
+  padding: 5px 10px;
+}
+.wapper-playlist {
+  background-color: var(--background-color);
+  padding-top: 30px;
+}
+.wapper-playlist__music-item.active {
+  box-shadow: 0 3px 3px 2px var(--primary-color);
+}
+.wapper-playlist__music-item {
+  background-color: #fff;
+  list-style: none;
+  padding: 10px 0;
+  margin-bottom: 10px;
+  border: 1px solid rgb(235, 231, 231);
+  border-radius: 5px;
+  box-shadow: 0 3px 3px 1px rgb(230, 229, 229);
+}
+.wapper-playlist__music-item-img {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 50px;
+}
+.wapper-playlist__music-item-img-src {
+  width: 60%;
+  height: 100%;
+  background-image: url("../img/picNowPlaying.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  border-radius: 50%;
+  border: 1px solid rgb(207, 206, 206);
+}
+.wapper-playlist__music-item-centent {
+  display: flex;
+  flex-direction: column;
+}
+.wapper-playlist__music-item-content-name,
+.wapper-playlist__music-item-content-singer {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.wapper-playlist__music-item-content-name {
+  font-weight: 600;
+}
+.wapper-playlist__music-item-content-singer {
+  color: var(--second-color);
+  font-size: 0.75rem;
+}
+.wapper-playlist__music-item-option {
+}
+.wapper-playlist__music-item-option span {
+  color: var(--second-color);
+  display: block;
+}
+
+.footer {
+}

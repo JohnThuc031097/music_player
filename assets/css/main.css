@@ -108,7 +108,7 @@ body {
   top: 0;
   left: 6%;
   right: 6%;
-  width: calc(100% - 12%);
+  width: 88%;
   height: 100%;
   border-radius: 3px;
 }

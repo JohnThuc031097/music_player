@@ -47,13 +47,8 @@ class AppMusic {
    */
   setDataSongInHTML(html, data) {
     for (const key in data) {
-      value = data[key];
-      if(key === 'image'){
-        value = `${apiDomain}/assets/img/${data[key]}`;
-      }
-      html = html.replace(`{${key}}`, value);
+      html = html.replace(`{${key}}`, data[key]);
     }
-    // console.log(html);
     return html;
   }
 };
@@ -62,7 +57,7 @@ const htmlSong =/*html*/`
       <li song-id="{id}" class="col mb-3_5 wapper-playlist__music-item {isActive}">
         <div class="row">
           <div class="col mb wapper-playlist__music-item-img">
-            <img class="wapper-playlist__music-item-img-src" src="{image}">
+            <img class="wapper-playlist__music-item-img-src" style="background-image: url('./assets/img/{image}');">
           </div>
           <div class="col mb-2_5 wapper-playlist__music-item-centent">
             <span class="wapper-playlist__music-item-content-name">{name}</span>

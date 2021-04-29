@@ -2,27 +2,26 @@
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
-const apiSongs = 'https://my-json-server.typicode.com/JohnThuc031097/api_music_player/songs';
-/**
- * Format App
- * 1. Render Song
- */
+const apiDomain = 'https://my-json-server.typicode.com/JohnThuc031097/api_music_player';
+const apiAppSongs = 'songs';
 
+const ePlayList = $('.wapper-playlist');
 
 class AppMusic {
-  constructor(apiUrl, htmlSong) {
+  constructor(apiDomain, apiUrl, htmlSong) {
+    this.apiDomain = apiDomain;
     this.apiUrl = apiUrl;
     this.htmlSong = htmlSong;
   }
   init() {
-    console.log(this.apiUrl, this.htmlSong);
   }
 
-  loadDataSongs() {
-    let result = this.getSongs(this.renderSongs, (error) => {
-      console.log(error);
+  loadDataSongs(ePlayList) {
+    this.getSongs((data) => {
+      ePlayList.innerHTML = this.renderSongs(data);
+    }, (error) => {
+      console.log('error:',error);
     });
-    console.log(result);
   }
 
   /**
@@ -30,7 +29,7 @@ class AppMusic {
    * @param {*} errorCallback function
    */
   getSongs(callBack, errorCallback) {
-    fetch(this.apiUrl)
+    fetch(`${this.apiDomain}/${this.apiUrl}`)
       .then(res => res.json())
       .then(callBack)
       .catch(errorCallback);
@@ -39,26 +38,28 @@ class AppMusic {
    * @param {*} data 
    */
   renderSongs(data) {
-    return this.setDataSongInHTML(this.htmlSong, data);
+    return this.setDataSongInHTML(this.htmlSong, ...data);
   }
   /**
    * @param {*} html 
    * @param {*} data
-   * @returns {*} Strings html after replace
+   * @returns Strings html after replace
    */
   setDataSongInHTML(html, data) {
-    let result = html;
     for (const key in data) {
-      console.log(`{${key}}`, data[key]);
-      result.replace(`{${key}}`, data[key]);
+      value = data[key];
+      if(key === 'image'){
+        value = `${apiDomain}/assets/img/${data[key]}`;
+      }
+      html = html.replace(`{${key}}`, value);
     }
-    return result;
+    // console.log(html);
+    return html;
   }
 };
 
-
-let htmlSong =/*html*/`
-      <li {id} class="col mb-3_5 wapper-playlist__music-item {isActive}">
+const htmlSong =/*html*/`
+      <li song-id="{id}" class="col mb-3_5 wapper-playlist__music-item {isActive}">
         <div class="row">
           <div class="col mb wapper-playlist__music-item-img">
             <img class="wapper-playlist__music-item-img-src" src="{image}">
@@ -74,6 +75,6 @@ let htmlSong =/*html*/`
           </div>
         </div>
       </li>`;
-const appMusic = new AppMusic(apiSongs, htmlSong);
+const appMusic = new AppMusic(apiDomain, apiAppSongs, htmlSong);
 appMusic.init();
-appMusic.loadDataSongs();
+appMusic.loadDataSongs(ePlayList);

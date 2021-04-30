@@ -10,15 +10,15 @@ const apiAppSongs = 'songs';
 const eAudio = $('#audio-song');
 const eNameSong = $('.heading__center-music-name');
 const eImageCD = $('.wapper-audio__img-music');
-const ePlayPercent = $('.wapper-audio__progress-bar-percent');
 const ePlayList = $('.wapper-playlist');
+const eAudioDurationPercent = $('.wapper-audio__progress-bar-percent');
+const eAudioDurationCircle = $('.wapper-audio__progress-bar-circle');
 const eIndexSongCurrent = $('.display__count-current-song');
 const eIndexSongTotal = $('.display__count-total-song');
 
 const ePlayControl = $('.wapper-audio__control-music-play');
 const ePauseControl = $('.wapper-audio__control-music-pause');
 
-const htmlSong = /*html*/``;
 const htmlPlayList =/*html*/`
       <li song-id="{id}" class="col mb-3_5 wapper-playlist__music-item {isActive}">
         <div class="row">
@@ -41,39 +41,26 @@ const appMusic = {
   currentIndex: 0,
   listSong: undefined,
 
+  init: async function () {
+    Api.apiDomain = apiDomain;
+    Api.apiUrl = apiAppSongs;
+    this.listSong = await Api.getAll(data => data, error => {
+      console.error('Fetch:', error);
+    });
+    this.defineProperties();
+    // this.setDataAudio();
+    this.renderPlayList();
+    this.renderInfoSongCurrent();
+    this.renderIndexSong();
+    this.renderIndexSongTotal();
+  },
+
   defineProperties: function () {
     Object.defineProperty(this, 'currentSong', {
       get: function () {
         return this.listSong[this.currentIndex];
       }
     });
-  },
-
-  init: function () {
-    Api.apiDomain = apiDomain;
-    Api.apiUrl = apiAppSongs;
-    return Api.getAll(data => data, error => {
-      console.error('Fetch:', error);
-    })
-      .then((data) => {
-        this.listSong = data;
-      })
-      .then(() => {
-        this.defineProperties();
-      })
-      .then(() => {
-        this.renderPlayList();
-      })
-      .then(() => {
-        this.renderInfoSongCurrent();
-      })
-      .then(() => {
-        this.renderIndexSong();
-        this.renderIndexSongTotal();
-      })
-      .then(() => {
-        this.setDataAudio();
-      })
   },
 
   setDataAudio: function () {
@@ -97,14 +84,46 @@ const appMusic = {
     ePlayList.innerHTML = Render.renderHTML(htmlPlayList, this.listSong);
   },
 
-  start: function () {
-    this.init();
-    handleEvents(this.currentSong);
+  start: async function () {
+    await this.init();
+    handleEvents();
   }
 };
 
-const handleEvents = (currentSong) => {
+const handleEvents = () => {
   let heightDefault = eImageCD.offsetHeight;
+  let audio = new Audio(appMusic.currentSong.file);
+  let audioType = 'audio/mp3';
+  let audioDurationPercent = [88, 92];
+  let audioDurationLimit = 0;
+
+  ePlayControl.onclick = () => {
+    if (audio.canPlayType(audioType) === 'probably') {
+      ePlayControl.style.display = 'none';
+      ePauseControl.style.display = 'block';
+      audio.play();
+    }
+  };
+
+  ePauseControl.onclick = () => {
+    if (audio.canPlayType(audioType) === 'probably') {
+      ePlayControl.style.display = 'block';
+      ePauseControl.style.display = 'none';
+      audio.pause();
+    };
+  };
+
+  audio.ontimeupdate = () => {
+    let timeCurrent = (Math.floor(audio.currentTime) / audioDurationLimit);
+    eAudioDurationPercent.style.width = timeCurrent + '%';
+    eAudioDurationCircle.style.left = 5 + timeCurrent + '%';
+    console.log(Math.floor(audio.currentTime));
+    console.log(eAudioDurationCircle.offsetLeft);
+  }
+
+  audio.onloadedmetadata = () => {
+    audioDurationLimit = Math.floor(audio.duration) / audioDurationPercent[0];
+  };
 
   document.onscroll = () => {
     let scrollY = window.scrollY || document.documentElement.scrollTop;
@@ -112,22 +131,9 @@ const handleEvents = (currentSong) => {
     eImageCD.style.height = (newHeight < 0) ? 0 : newHeight + 'px';
     eImageCD.style.opacity = newHeight / heightDefault;
   };
-
-  ePlayControl.onclick = () => {
-    ePlayControl.style.display = 'none';
-    ePauseControl.style.display = 'block';
-    // eAudio.play();
-    // let audio = new Audio('https://data3.chiasenhac.com/downloads/2100/5/2099985-5615962a/320/Big%20City%20Boi%20-%20Binz_%20Touliver.mp3');
-    let audio = new Audio('./assets/file/Bigcityboi_Binz.mp3');
-    audio.play();
-  };
-  ePauseControl.onclick = () => {
-    ePlayControl.style.display = 'block';
-    ePauseControl.style.display = 'none';
-    eAudio.pause();
-  }
-
-
 };
 
 appMusic.start();
+
+// eAudio.play();
+eAudio.pause();

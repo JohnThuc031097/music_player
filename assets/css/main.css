@@ -126,7 +126,8 @@ body {
   z-index: 1;
   position: absolute;
   top: -4px;
-  left: 6%;
+  /* left: 92%; */
+  left: 5%;
   width: 10px;
   height: 10px;
   background-color: var(--primary-color);

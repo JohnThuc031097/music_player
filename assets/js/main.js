@@ -7,13 +7,16 @@ const $$ = document.querySelectorAll.bind(document);
 const apiDomain = 'http://localhost:3000';
 const apiAppSongs = 'songs';
 
-const eAudio = $('.audio-song');
+const eAudio = $('#audio-song');
 const eNameSong = $('.heading__center-music-name');
 const eImageCD = $('.wapper-audio__img-music');
 const ePlayPercent = $('.wapper-audio__progress-bar-percent');
 const ePlayList = $('.wapper-playlist');
 const eIndexSongCurrent = $('.display__count-current-song');
 const eIndexSongTotal = $('.display__count-total-song');
+
+const ePlayControl = $('.wapper-audio__control-music-play');
+const ePauseControl = $('.wapper-audio__control-music-pause');
 
 const htmlSong = /*html*/``;
 const htmlPlayList =/*html*/`
@@ -33,10 +36,6 @@ const htmlPlayList =/*html*/`
           </div>
         </div>
       </li>`;
-const htmlTotalPlayList = /*html*/`
-  <span class="display__count-current-song">{songIdCrr}</span>
-  <span class="display__count-operator-song">/</span>
-  <span class="display__count-total-song">{songTotal}</span>`;
 
 const appMusic = {
   currentIndex: 0,
@@ -69,18 +68,16 @@ const appMusic = {
         this.renderInfoSongCurrent();
       })
       .then(() => {
-        this.setDataAudio();
-      })
-      .then(() => {
         this.renderIndexSong();
         this.renderIndexSongTotal();
+      })
+      .then(() => {
+        this.setDataAudio();
       })
   },
 
   setDataAudio: function () {
     eAudio.querySelector('source').src = this.currentSong.file;
-    eAudio.load();
-    eAudio.play();
   },
 
   renderInfoSongCurrent: function () {
@@ -103,20 +100,32 @@ const appMusic = {
   start: function () {
     this.init();
 
-    handleEvents.onScroll(eImageCD);
+    handleEvents();
   }
 };
 
-const handleEvents = {
-  onScroll: (e) => {
-    let heightDefault = e.offsetHeight;
-    document.onscroll = () => {
-      let scrollY = window.scrollY || document.documentElement.scrollTop;
-      let newHeight = heightDefault - scrollY;
-      e.style.height = (newHeight < 0) ? 0 : newHeight + 'px';
-      e.style.opacity = newHeight / heightDefault;
-    }
+const handleEvents = () => {
+  let heightDefault = eImageCD.offsetHeight;
+
+  document.onscroll = () => {
+    let scrollY = window.scrollY || document.documentElement.scrollTop;
+    let newHeight = heightDefault - scrollY;
+    eImageCD.style.height = (newHeight < 0) ? 0 : newHeight + 'px';
+    eImageCD.style.opacity = newHeight / heightDefault;
+  };
+
+  ePlayControl.onclick = () => {
+    ePlayControl.style.display = 'none';
+    ePauseControl.style.display = 'block';
+    eAudio.play();
+  };
+  ePauseControl.onclick = () => {
+    ePlayControl.style.display = 'block';
+    ePauseControl.style.display = 'none';
+    eAudio.pause();
   }
+
+
 };
 
 appMusic.start();

@@ -7,6 +7,7 @@ const $$ = document.querySelectorAll.bind(document);
 const apiDomain = 'http://localhost:3000';
 const apiAppSongs = 'songs';
 
+const eImageCD = $('.wapper-audio__img-music');
 const ePlayList = $('.wapper-playlist');
 const eDisplayCount = $('.display__count-song');
 
@@ -33,24 +34,63 @@ const htmlTotalPlayList = /*html*/`
   <span class="display__count-total-song">{songTotal}</span>`;
 
 const appMusic = {
-  init: function () {
+  currentIndex: 0,
+  listSong: undefined,
+
+  defineProperties: function () {
+    Object.defineProperty(this, 'currentSong', {
+      get: function () {
+        return this.listSong[this.currentIndex];
+      }
+    });
+  },
+
+  loadData: function () {
     Api.apiDomain = apiDomain;
     Api.apiUrl = apiAppSongs;
-    Api.getAll(data => {    
-      console.log(data);
-      
-      let songDisplay = {
-        songIdCrr: 1,
-        songTotal: data.length
-      };
-      console.log(songDisplay);
-
-      ePlayList.innerHTML = Render.renderHTML(htmlPlayList, data);
-      eDisplayCount.innerHTML = Render.renderHTML(htmlTotalPlayList, [songDisplay]);
-    }, error => {
+    Api.getAll(data => data, error => {
       console.error('getSongs:', error);
-    });
-  }
-}
+    })
+      .then((data) => {
+        this.listSong = data;
+        console.log('listSong:', this.listSong);
+      })
+      .then(() => {
+        this.defineProperties();
+        console.log('currentSong:', this.currentSong);
+      })
+      .then(() => {
+        this.renderData();
+      })
+  },
 
-appMusic.init();
+  renderData: function () {
+    let songDisplay = {
+      songIdCrr: 1,
+      songTotal: this.listSong.length
+    };
+    console.log('songDisplay: ', songDisplay);
+    ePlayList.innerHTML = Render.renderHTML(htmlPlayList, this.listSong);
+    eDisplayCount.innerHTML = Render.renderHTML(htmlTotalPlayList, [songDisplay]);
+  },
+
+  start: function () {
+    this.loadData();
+
+    handleEvents.onScroll(eImageCD);
+  }
+};
+
+const handleEvents = {
+  onScroll: (e) => {
+    let heightDefault = e.offsetHeight;
+    document.onscroll = () => {
+      let scrollY = window.scrollY || document.documentElement.scrollTop;
+      let newHeight = heightDefault - scrollY;
+      e.style.height = (newHeight < 0) ? 0 : newHeight + 'px';
+      e.style.opacity = newHeight / heightDefault;
+    }
+  }
+};
+
+appMusic.start();

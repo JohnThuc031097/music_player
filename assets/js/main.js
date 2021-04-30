@@ -7,10 +7,13 @@ const $$ = document.querySelectorAll.bind(document);
 const apiDomain = 'http://localhost:3000';
 const apiAppSongs = 'songs';
 
+const eAudio = $('.audio-song');
 const eImageCD = $('.wapper-audio__img-music');
+const ePlayPercent = $('.wapper-audio__progress-bar-percent');
 const ePlayList = $('.wapper-playlist');
 const eDisplayCount = $('.display__count-song');
 
+const htmlSong = /*html*/``;
 const htmlPlayList =/*html*/`
       <li song-id="{id}" class="col mb-3_5 wapper-playlist__music-item {isActive}">
         <div class="row">
@@ -48,7 +51,7 @@ const appMusic = {
   loadData: function () {
     Api.apiDomain = apiDomain;
     Api.apiUrl = apiAppSongs;
-    Api.getAll(data => data, error => {
+    return Api.getAll(data => data, error => {
       console.error('getSongs:', error);
     })
       .then((data) => {
@@ -60,11 +63,15 @@ const appMusic = {
         console.log('currentSong:', this.currentSong);
       })
       .then(() => {
-        this.renderData();
+        this.renderPlayList();
       })
   },
 
-  renderData: function () {
+  renderInfoSong: function () {
+    eAudio.style.backgroundImage = ';'
+  },
+
+  renderPlayList: function () {
     let songDisplay = {
       songIdCrr: 1,
       songTotal: this.listSong.length

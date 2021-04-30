@@ -134,6 +134,3 @@ const handleEvents = () => {
 };
 
 appMusic.start();
-
-// eAudio.play();
-eAudio.pause();

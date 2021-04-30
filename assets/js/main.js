@@ -10,7 +10,7 @@ const apiAppSongs = 'songs';
 const ePlayList = $('.wapper-playlist');
 const eDisplayCount = $('.display__count-song');
 
-const htmlSong =/*html*/`
+const htmlPlayList =/*html*/`
       <li song-id="{id}" class="col mb-3_5 wapper-playlist__music-item {isActive}">
         <div class="row">
           <div class="col mb wapper-playlist__music-item-img">
@@ -27,19 +27,26 @@ const htmlSong =/*html*/`
           </div>
         </div>
       </li>`;
-const htmlTotalSong = /*html*/`
-  <span class="display__count-current-song">1</span>
+const htmlTotalPlayList = /*html*/`
+  <span class="display__count-current-song">{songIdCrr}</span>
   <span class="display__count-operator-song">/</span>
   <span class="display__count-total-song">{songTotal}</span>`;
 
 const appMusic = {
-  init: function (){
+  init: function () {
     Api.apiDomain = apiDomain;
     Api.apiUrl = apiAppSongs;
-    Api.getSongs(data => {
-      console.log('getSongs:', data);
-      ePlayList.innerHTML = Render.renderPlayList(htmlSong, data);
-      eDisplayCount.innerHTML = Render.renderTotalSong(htmlTotalSong, data.length);
+    Api.getAll(data => {    
+      console.log(data);
+      
+      let songDisplay = {
+        songIdCrr: 1,
+        songTotal: data.length
+      };
+      console.log(songDisplay);
+
+      ePlayList.innerHTML = Render.renderHTML(htmlPlayList, data);
+      eDisplayCount.innerHTML = Render.renderHTML(htmlTotalPlayList, [songDisplay]);
     }, error => {
       console.error('getSongs:', error);
     });

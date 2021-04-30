@@ -1,23 +1,15 @@
 export const Render = {
 
-  renderPlayList: (htmlSong, data) => {
-    return [...data].reduce((htmls, html) => {
-      return htmls += Render.setDataSongInHTML(htmlSong, html);
+  renderHTML: (html, data) => {
+    return [...data].reduce((result, value) => {
+      return result += Render.setDataHTML(html, value);
     }, '');
   },
 
-  renderTotalSong: (html, data) => {
-    return Render.setTotalSongInHTML(html, data);
-  },
-
-  setDataSongInHTML: (html, data) => {
+  setDataHTML: (html, data) => {
     for (const key in data) {
       html = html.replace(`{${key}}`, data[key]);
     }
     return html;
   },
-
-  setTotalSongInHTML: (html, data) => {
-    return html.replace('{songTotal}', data);
-  }
 };

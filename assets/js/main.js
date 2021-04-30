@@ -99,12 +99,11 @@ const appMusic = {
 
   start: function () {
     this.init();
-
-    handleEvents();
+    handleEvents(this.currentSong);
   }
 };
 
-const handleEvents = () => {
+const handleEvents = (currentSong) => {
   let heightDefault = eImageCD.offsetHeight;
 
   document.onscroll = () => {
@@ -117,7 +116,10 @@ const handleEvents = () => {
   ePlayControl.onclick = () => {
     ePlayControl.style.display = 'none';
     ePauseControl.style.display = 'block';
-    eAudio.play();
+    // eAudio.play();
+    // let audio = new Audio('https://data3.chiasenhac.com/downloads/2100/5/2099985-5615962a/320/Big%20City%20Boi%20-%20Binz_%20Touliver.mp3');
+    let audio = new Audio('./assets/file/Bigcityboi_Binz.mp3');
+    audio.play();
   };
   ePauseControl.onclick = () => {
     ePlayControl.style.display = 'block';

@@ -8,17 +8,19 @@ const apiDomain = 'http://localhost:3000';
 const apiAppSongs = 'songs';
 
 const eAudio = $('.audio-song');
+const eNameSong = $('.heading__center-music-name');
 const eImageCD = $('.wapper-audio__img-music');
 const ePlayPercent = $('.wapper-audio__progress-bar-percent');
 const ePlayList = $('.wapper-playlist');
-const eDisplayCount = $('.display__count-song');
+const eIndexSongCurrent = $('.display__count-current-song');
+const eIndexSongTotal = $('.display__count-total-song');
 
 const htmlSong = /*html*/``;
 const htmlPlayList =/*html*/`
       <li song-id="{id}" class="col mb-3_5 wapper-playlist__music-item {isActive}">
         <div class="row">
           <div class="col mb wapper-playlist__music-item-img">
-            <img class="wapper-playlist__music-item-img-src" style="background-image: url('./assets/img/{image}');">
+            <img class="wapper-playlist__music-item-img-src" style="background-image: url('{image}');">
           </div>
           <div class="col mb-2_5 wapper-playlist__music-item-centent">
             <span class="wapper-playlist__music-item-content-name">{name}</span>
@@ -48,41 +50,58 @@ const appMusic = {
     });
   },
 
-  loadData: function () {
+  init: function () {
     Api.apiDomain = apiDomain;
     Api.apiUrl = apiAppSongs;
     return Api.getAll(data => data, error => {
-      console.error('getSongs:', error);
+      console.error('Fetch:', error);
     })
       .then((data) => {
         this.listSong = data;
-        console.log('listSong:', this.listSong);
       })
       .then(() => {
         this.defineProperties();
-        console.log('currentSong:', this.currentSong);
       })
       .then(() => {
         this.renderPlayList();
       })
+      .then(() => {
+        this.renderInfoSongCurrent();
+      })
+      .then(() => {
+        this.setDataAudio();
+      })
+      .then(() => {
+        this.renderIndexSong();
+        this.renderIndexSongTotal();
+      })
   },
 
-  renderInfoSong: function () {
-    eAudio.style.backgroundImage = ';'
+  setDataAudio: function () {
+    eAudio.querySelector('source').src = this.currentSong.file;
+    eAudio.load();
+    eAudio.play();
+  },
+
+  renderInfoSongCurrent: function () {
+    eNameSong.innerHTML = this.currentSong.name;
+    eImageCD.firstElementChild.style.backgroundImage = `url('${this.currentSong.image}')`;
+  },
+
+  renderIndexSong: function () {
+    eIndexSongCurrent.innerHTML = this.currentSong.id + 1;
+  },
+
+  renderIndexSongTotal: function () {
+    eIndexSongTotal.innerHTML = this.listSong.length;
   },
 
   renderPlayList: function () {
-    let songDisplay = {
-      songIdCrr: 1,
-      songTotal: this.listSong.length
-    };
-    console.log('songDisplay: ', songDisplay);
     ePlayList.innerHTML = Render.renderHTML(htmlPlayList, this.listSong);
-    eDisplayCount.innerHTML = Render.renderHTML(htmlTotalPlayList, [songDisplay]);
   },
 
   start: function () {
-    this.loadData();
+    this.init();
 
     handleEvents.onScroll(eImageCD);
   }

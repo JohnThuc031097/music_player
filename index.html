@@ -65,26 +65,35 @@
               skip_next
             </span>
           </div>
-          <div class="col mb wapper-audio__control-music-shuffle">
+          <div class="col mb wapper-audio__control-music-random">
             <span class="material-icons">
               shuffle
             </span>
           </div>
         </div>
         <div class="row wapper-audio__progress-bar">
-          <div class="col mb-3_5 wapper-audio__progress-bar-bg"></div>
-          <div class="wapper-audio__progress-bar-percent"></div>
-          <div class="wapper-audio__progress-bar-circle"></div>
+          <input type="range" value="0" max="100" class="col mb-3_5 wapper-audio__progress-bar-range"></input>
         </div>
-        <div class="display__count-song">
-          <span class="display__count-current-song"></span>
-          <span class="display__count-operator-song">/</span>
-          <span class="display__count-total-song"></span>
+        <div class="row wapper-audio__show-display">
+          <div class="col mb-3">
+            <div class="row mb-o-space-between">
+              <div class="col mb-1_5 display__time-song">
+                <span class="display__time-minute-song">00</span>
+                <span class="display__time-operator-song">:</span>
+                <span class="display__time-second-song">00</span>
+                <span class="display__time-operator-space-song">/</span>
+                <span class="display__time-minute-duration-song">00</span>
+                <span class="display__time-operator-song">:</span>
+                <span class="display__time-second-duration-song">00</span>
+              </div>
+              <div class="col mb display__count-song">
+                <span class="display__count-current-song"></span>
+                <span class="display__count-operator-song">/</span>
+                <span class="display__count-total-song"></span>
+              </div>
+            </div>
+          </div>
         </div>
-        <audio id="audio-song">
-          <source src="" type="audio/mp3">
-          Your browser does not support the audio element
-        </audio>
       </div>
     </div>
     <ul class="row mb-wrap wapper-playlist">

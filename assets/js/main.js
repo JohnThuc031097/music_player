@@ -7,17 +7,23 @@ const $$ = document.querySelectorAll.bind(document);
 const apiDomain = 'http://localhost:3000';
 const apiAppSongs = 'songs';
 
-const eAudio = $('#audio-song');
 const eNameSong = $('.heading__center-music-name');
 const eImageCD = $('.wapper-audio__img-music');
 const ePlayList = $('.wapper-playlist');
-const eAudioDurationPercent = $('.wapper-audio__progress-bar-percent');
-const eAudioDurationCircle = $('.wapper-audio__progress-bar-circle');
+const eAudioProgressRange = $('.wapper-audio__progress-bar-range');
+const eTimeSongMinute = $(".display__time-minute-song");
+const eTimeSongMinuteDuration = $(".display__time-minute-duration-song");
+const eTimeSongSecond = $(".display__time-second-song");
+const eTimeSongSecondDuration = $(".display__time-second-duration-song");
 const eIndexSongCurrent = $('.display__count-current-song');
 const eIndexSongTotal = $('.display__count-total-song');
 
+const eReplayControl = $('.wapper-audio__control-music-replay');
+const ePreviousControl = $('.wapper-audio__control-music-previous');
 const ePlayControl = $('.wapper-audio__control-music-play');
 const ePauseControl = $('.wapper-audio__control-music-pause');
+const eNextControl = $('.wapper-audio__control-music-next');
+const eRandomControl = $('.wapper-audio__control-music-random');
 
 const htmlPlayList =/*html*/`
       <li song-id="{id}" class="col mb-3_5 wapper-playlist__music-item {isActive}">
@@ -48,7 +54,6 @@ const appMusic = {
       console.error('Fetch:', error);
     });
     this.defineProperties();
-    // this.setDataAudio();
     this.renderPlayList();
     this.renderInfoSongCurrent();
     this.renderIndexSong();
@@ -61,10 +66,6 @@ const appMusic = {
         return this.listSong[this.currentIndex];
       }
     });
-  },
-
-  setDataAudio: function () {
-    eAudio.querySelector('source').src = this.currentSong.file;
   },
 
   renderInfoSongCurrent: function () {
@@ -86,16 +87,44 @@ const appMusic = {
 
   start: async function () {
     await this.init();
-    handleEvents();
+    handleEvents(this);
   }
 };
 
-const handleEvents = () => {
+const handleEvents = (app) => {
   let heightDefault = eImageCD.offsetHeight;
   let audio = new Audio(appMusic.currentSong.file);
   let audioType = 'audio/mp3';
-  let audioDurationPercent = [88, 92];
-  let audioDurationLimit = 0;
+  let audioReplay = false;
+  let audioRandom = false;
+
+  eReplayControl.onclick = () => {
+    audioReplay = !audioReplay;
+    audio.loop = audioReplay;
+    let eChildrenReplay = eReplayControl.firstElementChild;
+    if (audioRandom) {
+      audioRandom = false;
+      eRandomControl.firstElementChild.style.color = 'var(--second-color)';
+    }
+    if (audioReplay) {
+      eChildrenReplay.style.color = 'var(--primary-color)';
+    } else {
+      eChildrenReplay.style.color = 'var(--second-color)';
+    }
+  };
+
+  ePreviousControl.onclick = () => {
+    app.currentIndex--;
+    if (app?.currentSong) {
+      console.log(app.currentSong);
+      audio.src = app.currentSong.file;
+      ePlayControl.onclick();
+    } else {
+      app.currentIndex++;
+    }
+    console.log(app.currentIndex);
+
+  }
 
   ePlayControl.onclick = () => {
     if (audio.canPlayType(audioType) === 'probably') {
@@ -113,17 +142,58 @@ const handleEvents = () => {
     };
   };
 
+  eNextControl.onclick = () => {
+    app.currentIndex++;
+    if (app?.currentSong) {
+      console.log(app.currentSong);
+      audio.src = app.currentSong.file;
+      ePlayControl.onclick();
+    } else {
+      app.currentIndex--;
+    }
+    console.log(app.currentIndex);
+  }
+
+  eRandomControl.onclick = () => {
+    audioRandom = !audioRandom;
+    let eChildrenRandom = eRandomControl.firstElementChild;
+    if (audioReplay) {
+      audioReplay = false;
+      audio.loop = audioReplay;
+      eReplayControl.firstElementChild.style.color = 'var(--second-color)';
+    }
+    if (audioRandom) {
+      eChildrenRandom.style.color = 'var(--primary-color)';
+    } else {
+      eChildrenRandom.style.color = 'var(--second-color)';
+    }
+  }
+
   audio.ontimeupdate = () => {
-    let timeCurrent = (Math.floor(audio.currentTime) / audioDurationLimit);
-    eAudioDurationPercent.style.width = timeCurrent + '%';
-    eAudioDurationCircle.style.left = 5 + timeCurrent + '%';
-    console.log(Math.floor(audio.currentTime));
-    console.log(eAudioDurationCircle.offsetLeft);
+    let timeCalcCurrent = Math.floor(audio.currentTime / audio.duration * 100);
+    eAudioProgressRange.value = timeCalcCurrent;
+    eTimeSongSecond.innerHTML = formatTime(Math.floor(audio.currentTime) % 60);
+    eTimeSongMinute.innerHTML = formatTime(Math.floor(audio.currentTime / 60));
+    if (audio.currentTime === audio.duration) {
+      ePlayControl.style.display = 'block';
+      ePauseControl.style.display = 'none';
+      eTimeSongSecond.innerHTML = '00';
+      eTimeSongMinute.innerHTML = '00';
+    }
   }
 
   audio.onloadedmetadata = () => {
-    audioDurationLimit = Math.floor(audio.duration) / audioDurationPercent[0];
+    audio.volume = .2;
+    eTimeSongSecondDuration.innerHTML = formatTime(Math.floor(audio.duration) % 60);
+    eTimeSongMinuteDuration.innerHTML = formatTime(Math.floor(audio.duration / 60));
   };
+
+  eAudioProgressRange.oninput = () => {
+    let valuePercentCrr = eAudioProgressRange.value;
+    let valueNewTime = Math.floor((audio.duration / 100) * valuePercentCrr);
+    audio.currentTime = valueNewTime;
+    eAudioProgressRange.value = valuePercentCrr;
+  }
 
   document.onscroll = () => {
     let scrollY = window.scrollY || document.documentElement.scrollTop;
@@ -131,6 +201,13 @@ const handleEvents = () => {
     eImageCD.style.height = (newHeight < 0) ? 0 : newHeight + 'px';
     eImageCD.style.opacity = newHeight / heightDefault;
   };
+
+  function formatTime(value) {
+    if (typeof value === 'number' && !Number.isNaN(value) && Number.isInteger(value)) {
+      if (value < 10) return `0${value}`;
+    };
+    return value;
+  }
 };
 
 appMusic.start();

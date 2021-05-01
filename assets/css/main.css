@@ -74,21 +74,21 @@ body {
 }
 .wapper-audio__control-music {
   color: var(--second-color);
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 .wapper-audio__control-music-replay span,
 .wapper-audio__control-music-previous span,
 .wapper-audio__control-music-play span,
 .wapper-audio__control-music-pause span,
 .wapper-audio__control-music-next span,
-.wapper-audio__control-music-shuffle span {
+.wapper-audio__control-music-random span {
   display: block;
   text-align: center;
   font-size: 1.5625rem;
 }
-.wapper-audio__control-music-replay {
-}
-.wapper-audio__control-music-previous {
+.wapper-audio__control-music-previous:active span,
+.wapper-audio__control-music-next:active span{
+  color: var(--primary-color);
 }
 .wapper-audio__control-music-play span,
 .wapper-audio__control-music-pause span {
@@ -104,51 +104,42 @@ body {
 .wapper-audio__control-music-shuffle {
 }
 .wapper-audio__progress-bar {
-  position: relative;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
-.wapper-audio__progress-bar-bg {
-  background-color: rgb(245, 180, 189);
-  height: 2px;
-  border-radius: 3px;
-}
-.wapper-audio__progress-bar-percent {
-  z-index: 0;
-  position: absolute;
-  top: 0;
-  left: 6%;
-  /* width: 88%; */
-  height: 100%;
-  background-color: var(--primary-color);
-  border-radius: 3px;
-}
-.wapper-audio__progress-bar-circle {
-  z-index: 1;
-  position: absolute;
-  top: -4px;
-  /* left: 92%; */
-  left: 5%;
-  width: 10px;
+.wapper-audio__progress-bar-range {
+  overflow: hidden;
+  width: 100%;
   height: 10px;
-  background-color: var(--primary-color);
-  border-radius: 50%;
+  -webkit-appearance: none;
+  background-color: #f7c1ce;
+  border-radius: 3px;
 }
-.display__count-song {
-  position: absolute;
-  top: calc(100% - 10px);
-  left: calc(50% - 25px);
-  padding: 0 10px;
-  background-color: #fff;
-  border-radius: 20px;
-  border: 1px solid rgb(236, 233, 233);
+.wapper-audio__progress-bar-range::-webkit-slider-thumb {
+  width: .0625rem;
+  -webkit-appearance: none;
+  cursor: ew-resize;
+  background: var(--primary-color);
+  box-shadow: -764px 0 0 764px var(--primary-color);
 }
-.display__count-current-song,
-.display__count-operator-song,
-.display__count-total-song {
+
+.wapper-audio__show-display {
+  margin-bottom: 10px;
+}
+
+.display__time-song {
   color: var(--second-color);
+  text-align: center;
   font-size: 0.75rem;
 }
-.display__count-operator-song {
+.display__time-minute-song,
+.display__time-second-song {
+  color: var(--primary-color);
+}
+
+.display__count-song {
+  color: var(--second-color);
+  text-align: center;
+  font-size: 0.75rem;
 }
 .display__count-total-song {
   color: var(--primary-color);

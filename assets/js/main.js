@@ -14,11 +14,14 @@ const eImageCD = $('.wapper-audio__img-music');
 const eAudioProgressRange = $('.wapper-audio__progress-bar-range');
 
 const ePlayList = $('.wapper-playlist');
+const nPlayListItem = '.wapper-playlist__music-item';
+const nPlayListItemActive = '.wapper-playlist__music-item.active';
+const nPlayListItemOptions = '.wapper-playlist__music-item-option';
+
 const eTimeSongMinute = $(".display__time-minute-song");
 const eTimeSongMinuteDuration = $(".display__time-minute-duration-song");
 const eTimeSongSecond = $(".display__time-second-song");
 const eTimeSongSecondDuration = $(".display__time-second-duration-song");
-
 
 const eReplayControl = $('.wapper-audio__control-music-replay');
 const ePreviousControl = $('.wapper-audio__control-music-previous');
@@ -58,7 +61,6 @@ const appMusic = {
     });
     this.defineProperties();
     this.renderPlayList();
-    this.renderInfoSongCurrent();
   },
 
   defineProperties: function () {
@@ -75,17 +77,18 @@ const appMusic = {
   },
 
   activeSongCurrent: function () {
-    const ePlayListItemActived = $('.wapper-playlist__music-item.active');
-    const ePlayListItems = $$('.wapper-playlist__music-item');
+    const ePlayListItemActived = $(nPlayListItemActive);
+    const ePlayListItem = $(`${nPlayListItem}[song-id="${this.currentIndex}"]`);
 
     ePlayListItemActived?.classList.remove('active');
-    ePlayListItems?.forEach((item) => {
-      if (Number(item.getAttribute('song-id')) === this.currentIndex) {
-        item.classList.add('active');
-        let newScroll = item.offsetTop;
-        document.documentElement.scrollTop = (newScroll - eImageCD.offsetHeight);
+    ePlayListItem?.classList.add('active');
+    setTimeout(() => {
+      if (this.currentIndex < 3) {
+        ePlayListItem.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+      } else {
+        ePlayListItem.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
       }
-    });
+    }, 200);
 
     eIndexSongCurrent.innerHTML = this.currentSong.id + 1;
     eIndexSongTotal.innerHTML = this.listSong.length;
@@ -102,11 +105,17 @@ const appMusic = {
 };
 
 const handleEvents = (app) => {
-  let audio = new Audio(app.currentSong.file);
-  let audioType = 'audio/mp3';
+  const audio = new Audio(app.currentSong.file);
   let audioVolume = 0.5;
   let audioReplay = false;
   let audioRandom = false;
+  const rotateAnimation = eImageCD.animate([
+    { transform: 'rotate(360deg)' }
+  ], {
+    duration: 15000,
+    iterations: Infinity
+  });
+  rotateAnimation.pause();
 
   eReplayControl.onclick = () => {
     audioReplay = !audioReplay;
@@ -125,39 +134,30 @@ const handleEvents = (app) => {
 
   ePreviousControl.onclick = () => {
     app.currentIndex--;
-    if (app?.currentSong) {
-      audio.src = app.currentSong.file;
-      ePlayControl.onclick();
-    } else {
-      app.currentIndex++;
-    }
-  }
+    app.currentIndex = (app?.currentSong) ? app.currentIndex : app.listSong.length - 1;
+    audio.src = app.currentSong.file;
+    audio.play();
+  };
 
   ePlayControl.onclick = () => {
-    if (audio.canPlayType(audioType) === 'probably') {
-      ePlayControl.style.display = 'none';
-      ePauseControl.style.display = 'block';
-      audio.play();
-    }
+    audio.src = app.currentSong.file;
+    audio.play();
   };
 
   ePauseControl.onclick = () => {
-    if (audio.canPlayType(audioType) === 'probably') {
-      ePlayControl.style.display = 'block';
-      ePauseControl.style.display = 'none';
-      audio.pause();
-    };
+    audio.pause();
   };
 
   eNextControl.onclick = () => {
-    app.currentIndex++;
-    if (app?.currentSong) {
-      audio.src = app.currentSong.file;
-      ePlayControl.onclick();
+    if (audioRandom) {
+      app.currentIndex = calcIndexNextSong();
     } else {
-      app.currentIndex--;
+      app.currentIndex++;
+      app.currentIndex = (app?.currentSong) ? app.currentIndex : 0;
     }
-  }
+    audio.src = app.currentSong.file;
+    audio.play();
+  };
 
   eRandomControl.onclick = () => {
     audioRandom = !audioRandom;
@@ -172,29 +172,6 @@ const handleEvents = (app) => {
     } else {
       eChildrenRandom.style.color = 'var(--second-color)';
     }
-  }
-
-  audio.ontimeupdate = () => {
-    let timeCalcCurrent = Math.floor(audio.currentTime / audio.duration * 100);
-    eAudioProgressRange.value = timeCalcCurrent;
-    eTimeSongSecond.innerHTML = formatTime(Math.floor(audio.currentTime) % 60);
-    eTimeSongMinute.innerHTML = formatTime(Math.floor(audio.currentTime / 60));
-    let rotateCurrent = Math.floor(audio.currentTime / audio.duration * 360);
-    eImageCD.style.transform = `rotate(${rotateCurrent}deg)`;
-    if (audio.currentTime === audio.duration) {
-      ePlayControl.style.display = 'block';
-      ePauseControl.style.display = 'none';
-    }
-  }
-
-  audio.onloadedmetadata = () => {
-    if (app?.currentSong) {
-      console.log(app.currentSong);
-      audio.volume = audioVolume;
-      app.activeSongCurrent();
-      eTimeSongSecondDuration.innerHTML = formatTime(Math.floor(audio.duration) % 60);
-      eTimeSongMinuteDuration.innerHTML = formatTime(Math.floor(audio.duration / 60));
-    }
   };
 
   eAudioProgressRange.oninput = () => {
@@ -204,12 +181,77 @@ const handleEvents = (app) => {
     eAudioProgressRange.value = valuePercentCrr;
   };
 
+  ePlayList.onclick = (e) => {
+    const ePlayListItem = e.target.closest(nPlayListItem);
+    const ePlayListItemActive = e.target.closest(nPlayListItemActive);
+    const ePlayListItemOptions = e.target.closest(nPlayListItemOptions);
+
+    if (ePlayListItem && !ePlayListItemActive && !ePlayListItemOptions) {
+      app.currentIndex = ePlayListItem.getAttribute('song-id');
+      audio.src = app.currentSong.file;
+      audio.load();
+      audio.play();
+    } else if (ePlayListItemOptions) {
+
+    }
+  };
+
+  audio.onplay = () => {
+    ePlayControl.style.display = 'none';
+    ePauseControl.style.display = 'block';
+    rotateAnimation.play();
+  };
+
+  audio.onpause = () => {
+    ePlayControl.style.display = 'block';
+    ePauseControl.style.display = 'none';
+    rotateAnimation.pause();
+  };
+
+  audio.ontimeupdate = () => {
+    let timeCalcCurrent = Math.floor(audio.currentTime / audio.duration * 100);
+    eAudioProgressRange.value = timeCalcCurrent;
+    eTimeSongSecond.innerHTML = formatTime(Math.floor(audio.currentTime) % 60);
+    eTimeSongMinute.innerHTML = formatTime(Math.floor(audio.currentTime / 60));
+  };
+
+  audio.onended = () => {
+    ePlayControl.style.display = 'block';
+    ePauseControl.style.display = 'none';
+    if (audioRandom) {
+      app.currentIndex = calcIndexNextSong();
+    } else {
+      app.currentIndex++;
+    }
+    audio.src = app.currentSong.file;
+    audio.load();
+    audio.play();
+  };
+
+  audio.onloadedmetadata = () => {
+    if (app?.currentSong) {
+      audio.volume = audioVolume;
+      app.activeSongCurrent();
+      app.renderInfoSongCurrent();
+      eTimeSongSecondDuration.innerHTML = formatTime(Math.floor(audio.duration) % 60);
+      eTimeSongMinuteDuration.innerHTML = formatTime(Math.floor(audio.duration / 60));
+    }
+  };
+
   document.onscroll = () => {
     let scrollY = window.scrollY || document.documentElement.scrollTop;
     let newHeight = app.hImageCD - scrollY;
     eImageCD.style.height = (newHeight < 0) ? 0 : newHeight + 'px';
     eImageCD.style.opacity = newHeight / app.hImageCD;
   };
+
+  function calcIndexNextSong() {
+    let indexRandom = Math.floor(Math.random() * app.listSong.length);
+    while (indexRandom === app.currentIndex) {
+      indexRandom = Math.floor(Math.random() * app.listSong.length);
+    }
+    return indexRandom;
+  }
 
   function formatTime(value) {
     if (typeof value === 'number' && !Number.isNaN(value) && Number.isInteger(value)) {
